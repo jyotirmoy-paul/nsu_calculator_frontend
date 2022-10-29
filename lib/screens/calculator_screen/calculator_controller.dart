@@ -1,5 +1,7 @@
 import 'package:calculator_frontend/screens/calculator_screen/models/calculator_display_model.dart';
 import 'package:calculator_frontend/screens/calculator_screen/models/calculator_text_display_model.dart';
+import 'package:calculator_frontend/screens/calculator_screen/models/result.dart';
+import 'package:calculator_frontend/service/calculator_service.dart';
 import 'package:calculator_frontend/themes/app_colors.dart';
 import 'package:intl/intl.dart';
 
@@ -25,7 +27,10 @@ enum DisplayType {
 }
 
 class CalculatorController {
+  static const _tag = 'CalculatorController';
+
   final Ref _ref;
+  final _service = CalculatorService();
 
   CalculatorController(this._ref);
 
@@ -35,8 +40,11 @@ class CalculatorController {
   OperatorType? operatorType;
   String operatorTypeString = '';
 
+  bool _equalsCalled = false;
+
   /// utility methods
   final _formatter = NumberFormat('#,##,###.${'#' * 10}');
+  final _resultFormatter = NumberFormat('#,##,###');
 
   void _writeToDisplay({
     required CalculatorDisplayModel model,
@@ -99,6 +107,11 @@ class CalculatorController {
   /// handle button press
 
   void onButtonPress(CalculatorButtonModel model) {
+    if (_equalsCalled) {
+      _equalsCalled = false;
+      _clear();
+    }
+
     switch (model.operatorType) {
       case OperatorType.add:
         return _add(model);
@@ -113,8 +126,7 @@ class CalculatorController {
         return _multiply(model);
 
       case OperatorType.equals:
-        // TODO: Handle this case.
-        break;
+        return _equals();
 
       case OperatorType.dot:
         return _dot(model);
@@ -166,7 +178,68 @@ class CalculatorController {
     _operation(model: model, type: OperatorType.multiply);
   }
 
-  void _equals() {}
+  String _formatResult(double res) {
+    final tmp = res.toString();
+    final t1 = _resultFormatter.format(res);
+
+    /// unncessary .0 check
+    if (tmp.endsWith('.0')) {
+      return t1;
+    }
+
+    return '$t1.${tmp.split('.')[1]}';
+  }
+
+  void _handleResult(Result result) {
+    /// write primary display's content to the secondary display
+    final primaryDisplayModel = _ref.read(primaryDisplayStateProvider);
+    _writeToDisplay(
+      model: primaryDisplayModel,
+      displayType: DisplayType.secondary,
+    );
+
+    late String res;
+
+    if (result.error != null) {
+      res = result.error!;
+    } else if (result.result != null) {
+      res = _formatResult(result.result!);
+    } else {
+      res = 'ERROR';
+    }
+
+    /// write result to the primary display
+    _writeToDisplay(
+      model: CalculatorDisplayModel(
+        textModels: [
+          CalculatorTextDisplayModel(
+            text: res,
+            color: result.error != null ? AppColors.red : null,
+          ),
+        ],
+      ),
+      displayType: DisplayType.primary,
+    );
+  }
+
+  /// this method talks to the server via GRPC to get the response
+  void _equals() async {
+    if (operatorType == null) return;
+    _equalsCalled = true;
+
+    if (operatorType == OperatorType.add ||
+        operatorType == OperatorType.subtract ||
+        operatorType == OperatorType.multiply ||
+        operatorType == OperatorType.divide) {
+      final result = await _service.operate(
+        operandA: double.parse(operandA),
+        operandB: double.parse(operandB),
+        operatorType: operatorType!,
+      );
+
+      _handleResult(result);
+    }
+  }
 
   void _dot(CalculatorButtonModel model) {
     if (operatorType == null) {

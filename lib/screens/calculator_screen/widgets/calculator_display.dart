@@ -51,6 +51,7 @@ class CalculatorDisplay extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             /// secondary display
             Consumer(
@@ -59,13 +60,20 @@ class CalculatorDisplay extends ConsumerWidget {
                 final state = ref.watch(secondaryDisplayStateProvider);
                 final theme = ref.watch(appThemeStateProvider);
 
-                return _buildRichText(
-                  state.textModels,
-                  defaultColor: theme.type == ThemeType.dark
-                      ? Colors.white
-                      : Colors.black,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.normal,
+                if (state.textModels.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                return FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: _buildRichText(
+                    state.textModels,
+                    defaultColor: theme.type == ThemeType.dark
+                        ? Colors.white
+                        : Colors.black,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.normal,
+                  ),
                 );
               },
             ),
