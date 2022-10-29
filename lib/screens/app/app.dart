@@ -1,5 +1,5 @@
-import 'package:calculator_frontend/screens/app/app_controller.dart';
-import 'package:calculator_frontend/screens/calculator_screen/calculator_screen.dart';
+import 'app_controller.dart';
+import '../calculator_screen/calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

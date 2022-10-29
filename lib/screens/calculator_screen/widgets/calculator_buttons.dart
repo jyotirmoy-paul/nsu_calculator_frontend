@@ -1,5 +1,5 @@
-import 'package:calculator_frontend/screens/calculator_screen/widgets/calculator_button/calculator_button.dart';
-import 'package:calculator_frontend/screens/calculator_screen/widgets/calculator_button/calculator_button_model.dart';
+import 'calculator_button/calculator_button.dart';
+import 'calculator_button/calculator_button_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

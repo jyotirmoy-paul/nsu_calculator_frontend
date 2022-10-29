@@ -1,4 +1,4 @@
-import 'package:calculator_frontend/screens/app/app_theme_data.dart';
+import '../screens/app/app_theme_data.dart';
 import 'package:flutter/material.dart';
 
 class Themes {

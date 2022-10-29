@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:calculator_frontend/screens/app/app_theme_data.dart';
-import 'package:calculator_frontend/themes/themes.dart';
+import 'app_theme_data.dart';
+import '../../themes/themes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final appControllerProvider = Provider((ref) => AppController(ref));

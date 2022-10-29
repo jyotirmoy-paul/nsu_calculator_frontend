@@ -1,8 +1,8 @@
-import 'package:calculator_frontend/screens/app/app_controller.dart';
-import 'package:calculator_frontend/screens/app/app_theme_data.dart';
-import 'package:calculator_frontend/screens/calculator_screen/widgets/calculator_buttons.dart';
-import 'package:calculator_frontend/screens/calculator_screen/widgets/calculator_display.dart';
-import 'package:calculator_frontend/screens/calculator_screen/widgets/theme_button.dart';
+import '../app/app_controller.dart';
+import '../app/app_theme_data.dart';
+import 'widgets/calculator_buttons.dart';
+import 'widgets/calculator_display.dart';
+import 'widgets/theme_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,16 +1,20 @@
-import 'package:calculator_frontend/screens/calculator_screen/widgets/calculator_button/calculator_button_model.dart';
+import '../../calculator_controller.dart';
+import 'calculator_button_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CalculatorButton extends StatelessWidget {
+class CalculatorButton extends ConsumerWidget {
   final CalculatorButtonModel model;
 
   const CalculatorButton(this.model, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        ref.read(calculatorControllerProvider).onButtonPress(model);
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
