@@ -1,19 +1,19 @@
 import 'package:calculator_frontend/screens/app/app_controller.dart';
 import 'package:calculator_frontend/screens/app/app_theme_data.dart';
 import 'package:calculator_frontend/screens/calculator_screen/calculator_controller.dart';
-import 'package:calculator_frontend/screens/calculator_screen/models/calculator_display_model.dart';
+import 'package:calculator_frontend/screens/calculator_screen/models/display_model.dart';
 import 'package:calculator_frontend/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../models/calculator_text_display_model.dart';
+import '../models/display_text_model.dart';
 
 class CalculatorDisplay extends ConsumerWidget {
   const CalculatorDisplay({super.key});
 
   RichText _buildRichText(
-    List<CalculatorTextDisplayModel> textModels, {
+    List<DisplayTextModel> textModels, {
     Color? defaultColor,
     double fontSize = 32.0,
     FontWeight fontWeight = FontWeight.bold,
@@ -77,6 +77,9 @@ class CalculatorDisplay extends ConsumerWidget {
                 );
               },
             ),
+
+            // seperator
+            const SizedBox(height: 18.0),
 
             /// primary display
             Consumer(

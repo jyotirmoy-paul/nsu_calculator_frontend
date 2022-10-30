@@ -12,19 +12,19 @@ import 'dart:typed_data' as $typed_data;
 const FactorizationRequest$json = const {
   '1': 'FactorizationRequest',
   '2': const [
-    const {'1': 'number', '3': 1, '4': 1, '5': 3, '10': 'number'},
+    const {'1': 'number', '3': 1, '4': 1, '5': 5, '10': 'number'},
   ],
 };
 
 /// Descriptor for `FactorizationRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List factorizationRequestDescriptor = $convert.base64Decode('ChRGYWN0b3JpemF0aW9uUmVxdWVzdBIWCgZudW1iZXIYASABKANSBm51bWJlcg==');
+final $typed_data.Uint8List factorizationRequestDescriptor = $convert.base64Decode('ChRGYWN0b3JpemF0aW9uUmVxdWVzdBIWCgZudW1iZXIYASABKAVSBm51bWJlcg==');
 @$core.Deprecated('Use factorizationResponseDescriptor instead')
 const FactorizationResponse$json = const {
   '1': 'FactorizationResponse',
   '2': const [
-    const {'1': 'factor', '3': 1, '4': 1, '5': 3, '10': 'factor'},
+    const {'1': 'factor', '3': 1, '4': 1, '5': 5, '10': 'factor'},
   ],
 };
 
 /// Descriptor for `FactorizationResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List factorizationResponseDescriptor = $convert.base64Decode('ChVGYWN0b3JpemF0aW9uUmVzcG9uc2USFgoGZmFjdG9yGAEgASgDUgZmYWN0b3I=');
+final $typed_data.Uint8List factorizationResponseDescriptor = $convert.base64Decode('ChVGYWN0b3JpemF0aW9uUmVzcG9uc2USFgoGZmFjdG9yGAEgASgFUgZmYWN0b3I=');

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:calculator_frontend/generated/average.pb.dart';
 import 'package:calculator_frontend/generated/calculator.pbgrpc.dart';
+import 'package:calculator_frontend/generated/factorization.pb.dart';
 import 'package:calculator_frontend/generated/operation.pb.dart';
 import 'package:calculator_frontend/screens/calculator_screen/models/result.dart';
 import 'package:calculator_frontend/screens/calculator_screen/widgets/calculator_button/calculator_button_model.dart';
@@ -24,6 +26,58 @@ class CalculatorService {
     );
 
     _stub = CalculatorServiceClient(channel);
+  }
+
+  Result _handleGrpcError(GrpcError e) {
+    log('$_tag :: operate: GrpcError: ${e.message}');
+    return Result(error: e.message);
+  }
+
+  Result _handleError(Object e) {
+    log('$_tag :: operate: Error: $e');
+    return Result.generalError;
+  }
+
+  Future<Result> average({
+    required Stream<double> stream,
+  }) async {
+    try {
+      final resp = await _stub.findAverage(
+        stream.map(
+          (event) => AverageRequest(number: event),
+        ),
+      );
+
+      return Result(
+        result: resp.result,
+      );
+    } on GrpcError catch (e) {
+      return _handleGrpcError(e);
+    } catch (e) {
+      return _handleError(e);
+    }
+  }
+
+  Future<Result?> factorize({
+    required int n,
+    required void Function(int factor) onGet,
+  }) async {
+    try {
+      final stream = _stub.factorize(FactorizationRequest(
+        number: n,
+      ));
+
+      await stream.forEach((response) {
+        onGet(response.factor);
+      });
+
+      return null;
+    } on GrpcError catch (e) {
+      return _handleGrpcError(e);
+    } catch (e) {
+      log('$_tag :: operate: Error: $e');
+      return Result.generalError;
+    }
   }
 
   Future<Result> operate({

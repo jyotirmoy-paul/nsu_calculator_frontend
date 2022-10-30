@@ -7,18 +7,17 @@
 
 import 'dart:core' as $core;
 
-import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class FactorizationRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'FactorizationRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'calculator'), createEmptyInstance: create)
-    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'number')
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'number', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
   FactorizationRequest._() : super();
   factory FactorizationRequest({
-    $fixnum.Int64? number,
+    $core.int? number,
   }) {
     final _result = create();
     if (number != null) {
@@ -48,9 +47,9 @@ class FactorizationRequest extends $pb.GeneratedMessage {
   static FactorizationRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $fixnum.Int64 get number => $_getI64(0);
+  $core.int get number => $_getIZ(0);
   @$pb.TagNumber(1)
-  set number($fixnum.Int64 v) { $_setInt64(0, v); }
+  set number($core.int v) { $_setSignedInt32(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasNumber() => $_has(0);
   @$pb.TagNumber(1)
@@ -59,13 +58,13 @@ class FactorizationRequest extends $pb.GeneratedMessage {
 
 class FactorizationResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'FactorizationResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'calculator'), createEmptyInstance: create)
-    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'factor')
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'factor', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
   FactorizationResponse._() : super();
   factory FactorizationResponse({
-    $fixnum.Int64? factor,
+    $core.int? factor,
   }) {
     final _result = create();
     if (factor != null) {
@@ -95,9 +94,9 @@ class FactorizationResponse extends $pb.GeneratedMessage {
   static FactorizationResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $fixnum.Int64 get factor => $_getI64(0);
+  $core.int get factor => $_getIZ(0);
   @$pb.TagNumber(1)
-  set factor($fixnum.Int64 v) { $_setInt64(0, v); }
+  set factor($core.int v) { $_setSignedInt32(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasFactor() => $_has(0);
   @$pb.TagNumber(1)
