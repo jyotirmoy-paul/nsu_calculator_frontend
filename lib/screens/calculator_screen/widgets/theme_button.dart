@@ -16,7 +16,8 @@ class ThemeButton extends ConsumerWidget {
         color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(18.0),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.only(top: 12.0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -30,14 +31,14 @@ class ThemeButton extends ConsumerWidget {
                 opacity: isDarkTheme ? 0.20 : 1.0,
                 child: const Icon(
                   Icons.light_mode_outlined,
-                  size: 28.0,
+                  size: 24.0,
                 ),
               ),
             ),
           ),
 
           // seperator
-          const SizedBox(width: 8.0),
+          const SizedBox(width: 4.0),
 
           // dark theme button
           InkWell(
@@ -49,7 +50,7 @@ class ThemeButton extends ConsumerWidget {
                 opacity: !isDarkTheme ? 0.20 : 1.0,
                 child: const Icon(
                   Icons.dark_mode_outlined,
-                  size: 28.0,
+                  size: 24.0,
                 ),
               ),
             ),
