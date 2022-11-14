@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:calculator_frontend/generated/operation.pb.dart';
 import 'package:calculator_frontend/screens/calculator_screen/models/display_model.dart';
 import 'package:calculator_frontend/screens/calculator_screen/models/display_text_model.dart';
 import 'package:calculator_frontend/screens/calculator_screen/models/result.dart';
 import 'package:calculator_frontend/service/calculator_service.dart';
 import 'package:calculator_frontend/themes/app_colors.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'widgets/calculator_button/calculator_button_model.dart';
@@ -48,6 +46,7 @@ class CalculatorController {
   bool _equalsCalled = false;
   bool _factorizationActive = false;
   bool _averageActive = false;
+  bool _sumActive = false;
 
   /// utility methods
   final _formatter = NumberFormat('#,##,###.${'#' * 10}');
@@ -97,6 +96,7 @@ class CalculatorController {
   DisplayOperationType get _displayOperationType {
     if (_factorizationActive) return DisplayOperationType.factorization;
     if (_averageActive) return DisplayOperationType.average;
+    if (_sumActive) return DisplayOperationType.sum;
     return DisplayOperationType.none;
   }
 
@@ -171,8 +171,8 @@ class CalculatorController {
       case OperatorType.average:
         return _average(model);
 
-      case OperatorType.max:
-        return _max(model);
+      case OperatorType.sum:
+        return _sum(model);
 
       case OperatorType.clear:
         return _clear();
@@ -185,7 +185,7 @@ class CalculatorController {
     required CalculatorButtonModel model,
     required OperatorType type,
   }) {
-    if (_factorizationActive || _averageActive) return;
+    if (_factorizationActive || _averageActive || _sumActive) return;
     if (operandA.isEmpty) return;
 
     operatorType = type;
@@ -327,8 +327,30 @@ class CalculatorController {
       await Future.delayed(Duration.zero);
     }
 
-    /// close the steram controller
+    /// close the stream controller
     _averageStreamController?.close();
+  }
+
+  void _handleEqualsMax() {
+    /// close the stream controller
+    _maxStreamController?.close();
+  }
+
+  void _handleMaxResponse(double d) {
+    _writeToDisplay(
+      model: DisplayModel(
+        textModels: [
+          const DisplayTextModel(
+            text: 'Sum: ',
+            color: AppColors.green,
+          ),
+          DisplayTextModel(
+            text: _formatResult(d),
+          ),
+        ],
+      ),
+      displayType: DisplayType.secondary,
+    );
   }
 
   void _handleAverageResult(Result result) {
@@ -394,6 +416,22 @@ class CalculatorController {
     );
   }
 
+  void _handleMaxResult(Result? result) {
+    if (result == null) return;
+
+    if (result.error != null) {
+      return _writeErrorToDisplay(
+        message: result.error!,
+        displayType: DisplayType.primary,
+      );
+    }
+
+    _writeErrorToDisplay(
+      message: Result.generalError,
+      displayType: DisplayType.primary,
+    );
+  }
+
   /// this method talks to the server via GRPC to get the response
   void _equals() async {
     _equalsCalled = true;
@@ -408,6 +446,8 @@ class CalculatorController {
     if (_factorizationActive) return _handleEqualsFactorization();
 
     if (_averageActive) return _handleEqualsAverage();
+
+    if (_sumActive) return _handleEqualsMax();
   }
 
   void _dot(CalculatorButtonModel model) {
@@ -440,10 +480,7 @@ class CalculatorController {
     _writeToDisplay(
       model: const DisplayModel(
         textModels: [
-          DisplayTextModel(
-            text: '0',
-            color: Colors.transparent,
-          )
+          DisplayTextModel.empty,
         ],
         operationType: DisplayOperationType.factorization,
       ),
@@ -514,7 +551,46 @@ class CalculatorController {
     }
   }
 
-  void _max(CalculatorButtonModel model) {}
+  StreamController<double>? _maxStreamController;
+  void _sum(CalculatorButtonModel model) async {
+    if (_sumActive) {
+      if (operandA.isEmpty) return;
+      _maxStreamController?.add(double.parse(operandA));
+      operandA = '';
+      _writeToDisplay(
+        model: const DisplayModel(
+            operationType: DisplayOperationType.sum,
+            textModels: [
+              DisplayTextModel.empty,
+            ]),
+        displayType: DisplayType.primary,
+      );
+    } else {
+      /// first clear everything, then start factorization
+      _clear();
+
+      _sumActive = true;
+
+      /// write to primary display to notify factorization mode
+      _writeToDisplay(
+        model: const DisplayModel(
+          textModels: [
+            DisplayTextModel.empty,
+          ],
+          operationType: DisplayOperationType.sum,
+        ),
+        displayType: DisplayType.primary,
+      );
+
+      _maxStreamController = StreamController();
+      final result = await _service.sum(
+        inStream: _maxStreamController!.stream,
+        onSumResponse: _handleMaxResponse,
+      );
+
+      _handleMaxResult(result);
+    }
+  }
 
   void _clear() {
     operandA = '';
@@ -523,6 +599,7 @@ class CalculatorController {
 
     _factorizationActive = false;
     _averageActive = false;
+    _sumActive = false;
 
     _writeToDisplay(
       model: DisplayModel.empty,
@@ -533,5 +610,9 @@ class CalculatorController {
       model: DisplayModel.empty,
       displayType: DisplayType.secondary,
     );
+
+    // close streams, if any active
+    _maxStreamController?.close();
+    _averageStreamController?.close();
   }
 }

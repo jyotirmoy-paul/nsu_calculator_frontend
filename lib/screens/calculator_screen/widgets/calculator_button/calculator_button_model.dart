@@ -12,7 +12,7 @@ enum OperatorType {
   number,
   factorize,
   average,
-  max,
+  sum,
   clear,
 }
 
@@ -121,8 +121,8 @@ class CalculatorButtonModelList {
   /// first row -> Max, 0, ., =
   static const List<CalculatorButtonModel> _row5 = [
     CalculatorButtonModel(
-      label: 'max',
-      operatorType: OperatorType.max,
+      label: 'sum',
+      operatorType: OperatorType.sum,
     ),
     CalculatorButtonModel(
       label: '0',

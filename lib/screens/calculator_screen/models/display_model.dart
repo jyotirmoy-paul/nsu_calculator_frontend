@@ -3,7 +3,7 @@ import 'display_text_model.dart';
 enum DisplayOperationType {
   average,
   factorization,
-  maximum,
+  sum,
   none,
 }
 

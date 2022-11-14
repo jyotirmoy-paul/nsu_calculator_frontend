@@ -13,7 +13,7 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'operation.pb.dart' as $0;
 import 'factorization.pb.dart' as $1;
 import 'average.pb.dart' as $2;
-import 'max.pb.dart' as $3;
+import 'sum.pb.dart' as $3;
 export 'calculator.pb.dart';
 
 class CalculatorServiceClient extends $grpc.Client {
@@ -35,10 +35,10 @@ class CalculatorServiceClient extends $grpc.Client {
           ($2.AverageRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $2.AverageResponse.fromBuffer(value));
-  static final _$findMax = $grpc.ClientMethod<$3.MaxRequest, $3.MaxResponse>(
-      '/calculator.CalculatorService/FindMax',
-      ($3.MaxRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $3.MaxResponse.fromBuffer(value));
+  static final _$sum = $grpc.ClientMethod<$3.SumRequest, $3.SumResponse>(
+      '/calculator.CalculatorService/Sum',
+      ($3.SumRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $3.SumResponse.fromBuffer(value));
 
   CalculatorServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -66,10 +66,9 @@ class CalculatorServiceClient extends $grpc.Client {
         .single;
   }
 
-  $grpc.ResponseStream<$3.MaxResponse> findMax(
-      $async.Stream<$3.MaxRequest> request,
+  $grpc.ResponseStream<$3.SumResponse> sum($async.Stream<$3.SumRequest> request,
       {$grpc.CallOptions? options}) {
-    return $createStreamingCall(_$findMax, request, options: options);
+    return $createStreamingCall(_$sum, request, options: options);
   }
 }
 
@@ -100,13 +99,13 @@ abstract class CalculatorServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.AverageRequest.fromBuffer(value),
         ($2.AverageResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.MaxRequest, $3.MaxResponse>(
-        'FindMax',
-        findMax,
+    $addMethod($grpc.ServiceMethod<$3.SumRequest, $3.SumResponse>(
+        'Sum',
+        sum,
         true,
         true,
-        ($core.List<$core.int> value) => $3.MaxRequest.fromBuffer(value),
-        ($3.MaxResponse value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $3.SumRequest.fromBuffer(value),
+        ($3.SumResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.OperationResponse> operate_Pre($grpc.ServiceCall call,
@@ -125,6 +124,6 @@ abstract class CalculatorServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.FactorizationRequest request);
   $async.Future<$2.AverageResponse> findAverage(
       $grpc.ServiceCall call, $async.Stream<$2.AverageRequest> request);
-  $async.Stream<$3.MaxResponse> findMax(
-      $grpc.ServiceCall call, $async.Stream<$3.MaxRequest> request);
+  $async.Stream<$3.SumResponse> sum(
+      $grpc.ServiceCall call, $async.Stream<$3.SumRequest> request);
 }

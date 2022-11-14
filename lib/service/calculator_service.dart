@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:calculator_frontend/generated/average.pb.dart';
 import 'package:calculator_frontend/generated/calculator.pbgrpc.dart';
 import 'package:calculator_frontend/generated/factorization.pb.dart';
+import 'package:calculator_frontend/generated/sum.pb.dart';
 import 'package:calculator_frontend/generated/operation.pb.dart';
 import 'package:calculator_frontend/screens/calculator_screen/models/result.dart';
 import 'package:calculator_frontend/screens/calculator_screen/widgets/calculator_button/calculator_button_model.dart';
@@ -11,7 +12,7 @@ import 'package:grpc/grpc.dart';
 class CalculatorService {
   static const _tag = 'CalculatorService';
 
-  final String _host = '0.0.0.0';
+  final String _host = '192.168.1.6';
   final int _port = 30031;
 
   late CalculatorServiceClient _stub;
@@ -36,6 +37,27 @@ class CalculatorService {
   Result _handleError(Object e) {
     log('$_tag :: operate: Error: $e');
     return Result.generalError;
+  }
+
+  Future<Result?> sum({
+    required Stream<double> inStream,
+    required void Function(double n) onSumResponse,
+  }) async {
+    try {
+      final outStream = _stub.sum(
+        inStream.map((event) => SumRequest(number: event)),
+      );
+
+      await outStream.forEach((response) {
+        onSumResponse(response.number);
+      });
+
+      return null;
+    } on GrpcError catch (e) {
+      return _handleGrpcError(e);
+    } catch (e) {
+      return _handleError(e);
+    }
   }
 
   Future<Result> average({
